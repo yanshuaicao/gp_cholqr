@@ -1,0 +1,49 @@
+function test_sparse_nmll_pyHistMatchKern_lowMem()
+%datadir = '/u/g8acai/gp_nips2012_data_results/data/preprocessed/';
+train_data_fname = 'hog-pyramidone-traindata';
+load(train_data_fname);
+ 
+N = size(trainx,1);
+m = 50;
+rInds = randperm(N);
+rInds = rInds(1:m);
+
+Xcells = histChannelMat2Cell(trainx,'hog-pyramidone');
+iXcells = histChannelMat2Cell(trainx(rInds,:), 'hog-pyramidone');
+
+KFunc = @(X0, X1, kern_hyp) histInterKern(@hist_isect_c, ...
+                                                   X0, ...
+                                                   X1, ...
+                                                   kern_hyp);
+                                               
+dKFunc_dkernhyp = @(X0, X1, kern_hyp, dd, varargin) ...
+                            histInterKern_dp(@hist_isect_c, ...
+                                             X0, ...
+                                             X1, ...
+                                             kern_hyp, ...
+                                             dd, ...
+                                             varargin{:}); 
+
+hyp0 = [.5 rand(1,3)];
+
+
+f = @(hh) sparse_nmll_fixedSIS_pyHistMatchKern_lowMem(hh, ...
+                                                      KFunc, ...
+                                                      dKFunc_dkernhyp, ...
+                                                      iXcells, ...
+                                                      Xcells, ...
+                                                      trainy, ...
+                                                      m, N);
+                                                  
+fprintf('Checking grad of  sparse_nmll_fixedSIS_pyHistMatchKern...')
+myGradientCheck(f,hyp0);
+fprintf('.')
+for i = 1:5
+    hyp2 = hyp0.*rand(size(hyp0));
+    myGradientCheck(f,hyp2);
+    fprintf('.')
+end
+fprintf('done\n');
+
+ 
+end

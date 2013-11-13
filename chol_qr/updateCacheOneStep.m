@@ -1,0 +1,26 @@
+function [QGG, infoQ, infoR] = updateCacheOneStep(  new_pivot , ...
+                                                    kadv,...
+                                                    k,...
+                                                    n,...
+                                                    newg, ...
+                                                    Q,...
+                                                    QGG, ...
+                                                    infoQ, ...
+                                                    infoR)
+                                          
+ 
+QGG(:, [kadv new_pivot]) = QGG(:, [new_pivot kadv]);
+
+infoQ([kadv new_pivot], :) = infoQ([new_pivot kadv], :);
+
+Qg = (Q(kadv:n, 1:k-1).'*newg(kadv:n));                  
+QGG = QGG + Qg*newg(1:n).';
+
+info_r = infoQ(kadv:n, :).' * newg(kadv:n);
+newQ = newg(1:n) - infoQ(1:n, :) * info_r;
+info_rn = norm(newQ);
+newQ = newQ / info_rn;
+infoR = [infoR info_r; zeros(1, size(infoR,2)) info_rn];
+infoQ = [infoQ newQ];
+ 
+end
