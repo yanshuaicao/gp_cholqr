@@ -1,0 +1,6 @@
+Code for the paper "Efficient Optimization for Sparse Gaussian Process Regression" Cao, et al. NIPS 2013
+
+Research project page at: www.cs.toronto.edu/~caoy/opt_sgpr
+
+See demo_1D.m for a quick example. 
+
