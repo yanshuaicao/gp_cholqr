@@ -1,10 +1,11 @@
 clear
 close all
-
+%
+startup
 % Mostly excerpt from runJob() as script for easier interaction
 %% Specify problem, and some important options
 %data set info
-JobOptions.dataDir = './Snelson_1D_data/';
+JobOptions.dataDir = [proj_setting.codeDir '/' 'Snelson_1D_data/'];
 JobOptions.dataSetName =  'snelson_1D';
 
 trainx = importdata([JobOptions.dataDir 'train_inputs']);

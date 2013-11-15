@@ -1,5 +1,6 @@
+
 proj_setting.subdirs = {'general_tools','tools','plot_tools','chol_qr'};
-proj_setting.codeDir = pwd();
+proj_setting.codeDir = fileparts(mfilename('fullpath'));
 addpath(proj_setting.codeDir);
 
 for i = 1:length(proj_setting.subdirs)
